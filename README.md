@@ -10,7 +10,7 @@
    
    *  Clone the repo into a local env 
    *  Source a virtual env, preferably python3.8 (please do not use 3.10 at any cost yet! It ate away too much time to revert the damage caused by compatibility issues)
-   *  Go to the [Makefile](https://github.com/sijojosem2/session_estimate/blob/main/Makefile) directory and run `make install-packages`
+   *  Go to the [Makefile](https://github.com/sijojosem2/session_estimate/blob/main/Makefile) directory (the base location where the MakeFile is located) and run `make install-packages`
    *  If all is good this should execute without any problems, since the python3.8 venv will be a blank slate for all the packages to be written upon
    *  Go to the [envfile](https://github.com/sijojosem2/session_estimate/blob/main/scripts/envfile) and provide the postgres connection string details
    *  We're set! 
