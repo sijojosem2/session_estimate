@@ -6,7 +6,7 @@
 
 ### Initial Setup 
 
-   Since I am working out a much more efficent way to airflow dockerize the whole ETL setup , I am temprarily using the crude method of Makefile deployement. Just to ensure package homogeneity and full ETL setup to deploy, kindly follow these steps:
+   Since I am working out a much more efficient way to airflow dockerize the whole ETL setup , I am temporarily using the crude method of Makefile deployment. Just to ensure package homogeneity and full ETL setup to deploy, kindly follow these steps:
    
    *  Clone the repo into a local env 
    *  Source a virtual env, preferably python3.8 (please do not use 3.10 at any cost yet! It ate away too much time to revert the damage caused by compatibility issues)
@@ -18,7 +18,7 @@
  
 ### ETL Setup 
 
-  The ETL code may seem a little bit of an overkill, but this is a pipeline format that I have used a list of actions are performed sequentially, I have used this in other repos as a quick and easy way to get data from multiple sources like S3,API,fixed/variable length csv into tables.
+  The ETL code may seem a bit of an overkill, but this is a pipeline format that I have used a list of actions are performed sequentially, I have used this in other repos as a quick and easy way to get data from multiple sources like S3,API,fixed/variable length csv into tables.
   
   The main set of actions are prescribed in the [pipeline](https://github.com/sijojosem2/session_estimate/blob/main/pipeline.py) file. The first action in the sequence:
   ```python 
@@ -29,7 +29,7 @@
         },
   ```      
   
-  is to create the basic table that will be populated from the csv. The [sql](https://github.com/sijojosem2/session_estimate/tree/main/sql) location contains the [pre_exec.sql](https://github.com/sijojosem2/session_estimate/blob/main/sql/pre_exec.sql) file which creates this basic table. At first I only reflect the avialble csv columns as an initial step.
+  is to create the basic table that will be populated from the csv. The [sql](https://github.com/sijojosem2/session_estimate/tree/main/sql) location contains the [pre_exec.sql](https://github.com/sijojosem2/session_estimate/blob/main/sql/pre_exec.sql) file which creates this basic table. At 1st I only extract the available csv columns as an initial step.
   
   The second step in the etl pipeline:
   ``` python
@@ -81,9 +81,9 @@ Once the initial setup is complete and when the postgres database is up, go to t
  
   The query for this is available in [session_queries.sql](https://github.com/sijojosem2/session_estimate/blob/main/sql/session_queries.sql).
   
-  In the Simple version, I have broken down the csv data into 15 mins chunks calculated by the **created_at** column. I have assumed the succesfull booking as any event  culminating with a 'Ride   Started', 'Ride Done' or 'Rating Screen' within a running series of 15 min chunks. This covers the case when the ride or application open/signup takes more than 15 min. The Flag that marks the succeful bookng is 'succesful_booking' and this denotes either Y for succesfull booking or N for unsuccesfull booking if the above mentioned status events are not available at the end of the session. Thus from this version both the question , ie session definition and whether a booking was succesful or not is fully answered.
+  In the Simple version, I have broken down the csv data into 15 minute chunks calculated by the **created_at** column. I have assumed the successful booking as any event  culminating with a 'Ride   Started', 'Ride Done' or 'Rating Screen' within a running series of 15 min chunks. This covers the case when the ride or application open/signup takes more than 15 min. The Flag that marks the successful booking is 'successful_booking' and this denotes either Y for successful booking or N for unsuccessful booking if the above-mentioned status events are not available at the end of the session. Thus, from this version both the question , ie session definition and whether a booking was successful or not is fully answered.
   
-  In the Extended version , which was my initial attempt at deciphering the session info, I had initially thought of bunching up created_at times between 'Application Opened' and 'Ride Started - Successful', the booking conditions remains the same as above, i.e booking is considered succesful only if any event culminating with a 'Ride Started', 'Ride Done' or 'Rating Screen' is availabe in a series of 15 min event chunks. This allowed me to find times taken between opening application and booking a ride , and from booking a ride to completing a ride. Even though this was not the question that was asked , I decided to keep this as a reference , just in case a similiar analysis is required in the future 
+  In the Extended version , which was my initial attempt at deciphering the session info, I had initially thought of bunching up created_at times between 'Application Opened' and 'Ride Started - Successful', the booking conditions remains the same as above, i.e. booking is considered successful only if any event culminating with a 'Ride Started', 'Ride Done' or 'Rating Screen' is available in a series of 15 minute event chunks. This allowed me to find times taken between opening application and booking a ride , and from booking a ride to completing a ride. Even though this was not the question that was asked , I decided to keep this as a reference , just in case a similar analysis is required in the future 
    
   
   
@@ -111,14 +111,14 @@ Answer the following questions:
    ```
      
      
- * Since the window uses the sort key (lower(anonymous_id), lower(context_device_id) , created_at) in the same order, an index would substantially speed up the execution. Additionally I have added an index on the col_hash column to answer question 3.
+ * Since the window uses the sort key (lower(anonymous_id), lower(context_device_id) , created_at) in the same order, an index would substantially speed up the execution. Additionally, I have added an index on the col_hash column to answer question 3.
  * I am assuming that the normalized data in the csv has been gleaned from various dimensions for analytics purposes. That being said, generating and keeping a UUID PRIMARY_KEY would be highly recommended, considering the volume and scale of records, a UUID will be ideally suited for this purpose. To further save some space we can use a v1 timestamp UUID which we can use for both sequential sorting and deriving the timestamp.
 
   
 ### 2. Do you see any possible future performance bottlenecks that we should worry about?
 
- * Since this is a text heavy search analytic query, the bigger the data grows the bigger the execution plan/time this takes. I had tested the dataset using the postgres TSQUERY and TSVECTOR functionality , which are excellent at text index matching functionalities, but I had to drop this approach, because of time constraints as well as the fact that at the current size the query plan execution is much faster with the LIKE operator than the TSQUERY/TSVECTOR functioality, but I need to research on this more.
- * Apart from the above, i would recommend an automatic partitioning. I had tried unsuccesfully to implement [this](https://github.com/pgpartman/pg_partman), since I found it super interesting and time saving, but I had to drop the idea because each time I change the postgresql.conf file postgres refuses to restart. If this works, this would be a great solution!  
+ * Since this is a text heavy search analytic query, the bigger the data grows the bigger the execution plan/time this takes. I had tested the dataset using the postgres TSQUERY and TSVECTOR functionality , which are excellent at text index matching functionalities, but I had to drop this approach, because of time constraints as well as the fact that at the current size the query plan execution is much faster with the LIKE operator than the TSQUERY/TSVECTOR functionality, but I need to research on this more.
+ * Apart from the above, i would recommend an automatic partitioning. I had tried unsuccessful to implement [this](https://github.com/pgpartman/pg_partman), since I found it super interesting and time saving, but I had to drop the idea because each time I change the postgresql.conf file postgres refuses to restart. If this works, this would be a great solution!  
   
 ### 3. What logic would you use to turn this data model into incremental (processing only new/delta data)?
   
