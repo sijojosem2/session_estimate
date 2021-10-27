@@ -1,0 +1,31 @@
+27-10-2021:20:38:44 DEBUG    [main.py:143] ------------- STARTING ETL PROCESS ----------------------------------
+27-10-2021:20:38:44 DEBUG    [main.py:148] pre_execution Execution done, moving on ....
+27-10-2021:20:38:44 DEBUG    [main.py:87] Dataframe for local_file with 102422 records created from variable length csv
+27-10-2021:20:38:46 ERROR    [logerreventhandler.py:30] uncaught exception: Traceback (most recent call last):
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/models/logerreventhandler.py", line 28, in wrapper
+    return function(*args, **kwargs)
+  File "main.py", line 47, in db_insert
+    return database.insert_records(df, **kwargs)
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/models/dbops.py", line 16, in insert_records
+    db_exec.insert_data(conn, df, kwargs["target_table"]["name"])
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/db_exec.py", line 24, in insert_data
+    cursor.copy_from(f, table_name, sep="\t", null="")
+psycopg2.errors.BadCopyFileFormat: missing data for column "col_hash"
+CONTEXT:  COPY mobile_events, line 1: "9DDC5BCD-0477-4E83-A32A-51013DA0A4E7	Hamburg	3.1.13	7A718FF6-584F-40E2-939D-224231295B1E	iOS	Out-Of-..."
+
+
+27-10-2021:20:38:46 DEBUG    [main.py:160] local_file Execution done, moving on ....
+27-10-2021:20:38:46 ERROR    [logerreventhandler.py:30] uncaught exception: Traceback (most recent call last):
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/models/logerreventhandler.py", line 28, in wrapper
+    return function(*args, **kwargs)
+  File "main.py", line 39, in exec_sql
+    return database.execute_sql_file(**kwargs)
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/models/dbops.py", line 21, in execute_sql_file
+    db_exec.execute_sql(conn, kwargs["exec_sql"]["name"])
+  File "/Users/user/Google_Drive_M4/Git_Personal/sess_estmate/db_exec.py", line 32, in execute_sql
+    cursor.execute(ddl_sql.read())
+psycopg2.errors.DuplicateColumn: column "col_hash" of relation "mobile_events" already exists
+
+
+27-10-2021:20:38:46 DEBUG    [main.py:148] post_execution_sql_script_example Execution done, moving on ....
+27-10-2021:20:38:46 DEBUG    [main.py:166] --------------- ENDING ETL PROCESS ----------------------------------
