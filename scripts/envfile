@@ -1,4 +1,7 @@
 export DATABASE_URI=postgresql://localhost/postgres?user=postgres_user&password=postgres_password
+#export AWS_ACCESS_KEY_ID=awskey123
+#export AWS_SECRET_ACCESS_KEYS=awssecretkey123
+#export FOOTBALL_API_KEY=apikey123
 
 
 
