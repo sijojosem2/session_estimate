@@ -129,5 +129,3 @@ dmypy.json
 .pyre/
 scripts/envfile
 .DS_Store
-scripts/envfile
-scripts/envfile
