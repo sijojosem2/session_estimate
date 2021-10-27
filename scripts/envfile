@@ -1,0 +1,14 @@
+export DATABASE_URI=postgresql://localhost/postgres?user=postgres_user&password=postgres_password
+
+
+
+
+
+
+
+
+
+
+
+
+
