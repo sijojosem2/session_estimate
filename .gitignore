@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+scripts/envfile
+.DS_Store
+scripts/envfile
+scripts/envfile
